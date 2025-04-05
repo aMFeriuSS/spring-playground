@@ -4,9 +4,9 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: hello-world-app
-    volumes:
-      - ./logs:/app/logs
+    restart: unless-stopped
     environment:
       - JAVA_OPTS=-Xmx512m
+      - LOG_LEVEL=INFO
     ports:
       - "8080:8080"  # In case you add HTTP endpoints later 

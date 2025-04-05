@@ -7,6 +7,7 @@ WORKDIR /app
 COPY gradlew .
 COPY gradle ./gradle
 COPY build.gradle .
+COPY settings.gradle .
 COPY LICENSE .
 
 # Copy source code
@@ -14,15 +15,10 @@ COPY src ./src
 
 # Build the application
 RUN chmod +x ./gradlew && \
-    ./gradlew shadowJar --no-daemon
+    ./gradlew bootJar --no-daemon
 
 # Run stage
 FROM eclipse-temurin:21-jre-jammy
-
-# Install supervisor
-RUN apt-get update && \
-    apt-get install -y supervisor && \
-    rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
@@ -30,11 +26,11 @@ WORKDIR /app
 COPY --from=builder /app/build/libs/*.jar app.jar
 COPY --from=builder /app/LICENSE .
 
-# Create directory for logs
-RUN mkdir -p /app/logs
+# Set environment variables
+ENV JAVA_OPTS="-Xmx512m -Xms256m"
 
-# Copy supervisor configuration
-COPY supervisord.conf /etc/supervisor/conf.d/app.conf
+# Expose the port the app runs on
+EXPOSE 8080
 
-# Start supervisor
-CMD ["/usr/bin/supervisord", "-n", "-c", "/etc/supervisor/supervisord.conf"] 
+# Start the application
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"] 
