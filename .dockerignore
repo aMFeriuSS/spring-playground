@@ -1,0 +1,22 @@
+# Git
+.git
+.gitignore
+
+# Gradle
+.gradle
+build
+!gradle/wrapper/gradle-wrapper.jar
+
+# Logs
+logs
+*.log
+
+# IDE
+.vscode
+
+# System files
+.DS_Store
+
+# Docker
+Dockerfile
+.dockerignore 

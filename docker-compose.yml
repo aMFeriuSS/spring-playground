@@ -1,0 +1,12 @@
+services:
+  hello-world:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: hello-world-app
+    volumes:
+      - ./logs:/app/logs
+    environment:
+      - JAVA_OPTS=-Xmx512m
+    ports:
+      - "8080:8080"  # In case you add HTTP endpoints later 
